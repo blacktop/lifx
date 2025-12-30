@@ -7,12 +7,12 @@ bump:
 .PHONY: build
 build:
 	@echo "🚀 Building Version $(shell svu current)"
-	go build -o TEMPLATE main.go
+	go build -o lifx main.go
 
 .PHONY: release
 release:
 	@echo "🚀 Releasing Version $(shell svu current)"
-	goreleaser build --id default --clean --snapshot --single-target --output dist/TEMPLATE
+	goreleaser build --id default --clean --snapshot --single-target --output dist/lifx
 
 .PHONY: snapshot
 snapshot:
@@ -24,3 +24,8 @@ vhs:
 	@echo "📼 VHS Recording"
 	@echo "Please ensure you have the 'vhs' command installed."
 	vhs < vhs.tape
+
+.PHONY: mcp-test
+mcp-test:
+	@echo "🧪 Testing MCP Server"
+	@(cat test/flash.jsonl; sleep 10) | go run main.go mcp

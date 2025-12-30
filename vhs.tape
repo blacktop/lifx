@@ -1,58 +1,108 @@
-# VHS documentation
-#
-# Output:
-#   Output <path>.gif               Create a GIF output at the given <path>
-#   Output <path>.mp4               Create an MP4 output at the given <path>
-#   Output <path>.webm              Create a WebM output at the given <path>
-#
-# Settings:
-#   Set FontSize <Number>           Set the font size of the terminal
-#   Set FontFamily <String>         Set the font family of the terminal
-#   Set Height <Number>             Set the height of the terminal
-#   Set Width <Number>              Set the width of the terminal
-#   Set LetterSpacing <Float>       Set the font letter spacing (tracking)
-#   Set LineHeight <Float>          Set the font line height
-#   Set Theme <String>              Set the theme of the terminal (JSON)
-#   Set Padding <Number>[em|px]     Set the padding of the terminal
-#   Set Framerate <Number>          Set the framerate of the recording
-#   Set PlaybackSpeed <Float>       Set the playback speed of the recording
-#
-# Sleep:
-#   Sleep <time>                    Sleep for a set amount of <time> in seconds
-#
-# Type:
-#   Type[@<time>] "<characters>"    Type <characters> into the terminal with a
-#                                   <time> delay between each character
-#
-# Keys:
-#   Backspace[@<time>] [number]     Press the Backspace key
-#   Down[@<time>] [number]          Press the Down key
-#   Enter[@<time>] [number]         Press the Enter key
-#   Space[@<time>] [number]         Press the Space key
-#   Tab[@<time>] [number]           Press the Tab key
-#   Left[@<time>] [number]          Press the Left Arrow key
-#   Right[@<time>] [number]         Press the Right Arrow key
-#   Up[@<time>] [number]            Press the Up Arrow key
-#   Down[@<time>] [number]          Press the Down Arrow key
-#   Ctrl+<key>                      Press the Control key + <key> (e.g. Ctrl+C)
-#
-# Display:
-#   Hide                            Hide the subsequent commands from the output
-#   Show                            Show the subsequent commands in the output
+# VHS Demo for lifx
+# Run with: vhs vhs.tape
 
 Output vhs.gif
 Output vhs.mp4
 Output vhs.webm
 
-Set FontSize 22
+Set FontSize 14
 Set Width 1200
-Set Height 600
-Set PlaybackSpeed 2
+Set Height 700
+Set Theme "Catppuccin Mocha"
+Set Padding 20
+Set TypingSpeed 50ms
+Set Shell "bash"
 
-Type "echo Welcome to VHS Action! 📼"
+# Start the app
+Type "./lifx --backend lan"
+Enter
+Sleep 2500ms
 
+# Navigate to a group/room (adjust counts for your setup)
+Down
+Sleep 150ms
+Down
+Sleep 150ms
+Down
+Sleep 400ms
+
+# Toggle side panel
+Tab
+Sleep 400ms
+Tab
+Sleep 400ms
+
+# Move to a light under the group
+Down
+Sleep 200ms
+
+# Toggle light off/on
+Space
+Sleep 600ms
+Space
+Sleep 600ms
+
+# Brightness up/down
+Type "l"
+Sleep 150ms
+Type "l"
+Sleep 150ms
+Type "h"
+Sleep 600ms
+
+# Color temperature warm/cool
+Type "w"
+Sleep 400ms
+Type "c"
+Sleep 600ms
+
+# Cycle color presets
+Type "p"
+Sleep 400ms
+Type "p"
+Sleep 600ms
+
+# Go back to group header
+Up
+Sleep 200ms
+Up
+Sleep 400ms
+
+# Group on/off
+Type "a"
+Sleep 600ms
+Type "x"
+Sleep 600ms
+
+# Group brightness
+Type "l"
+Sleep 150ms
+Type "l"
+Sleep 600ms
+
+# Open scenes
+Type "s"
+Sleep 800ms
+Down
+Sleep 250ms
+Enter
+Sleep 1200ms
+Escape
+Sleep 400ms
+
+# Search/filter
+Type "/"
+Sleep 300ms
+Type "desk"
+Sleep 600ms
+Enter
 Sleep 500ms
 
-Enter
+# Set brightness to 50%
+Type "5"
+Sleep 800ms
 
-Sleep 2s
+# Clear search and quit
+Escape
+Sleep 300ms
+Type "q"

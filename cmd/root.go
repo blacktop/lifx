@@ -1,5 +1,5 @@
 /*
-Copyright © <YEAR> blacktop
+Copyright © 2025 blacktop
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,38 +23,49 @@ package cmd
 
 import (
 	"os"
+	"time"
 
+	"github.com/blacktop/lifx/internal/tui"
 	"github.com/spf13/cobra"
 )
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+	rootCmd.PersistentFlags().StringVar(&flagBackend, "backend", "auto", "Backend to use: auto|lan|api")
+	rootCmd.PersistentFlags().StringVar(&flagAPIKey, "api-key", "", "LIFX API key (overrides LIFX_API_KEY)")
+	rootCmd.PersistentFlags().StringVar(&flagLanListen, "lan-listen", "", "LAN listen IP (default 0.0.0.0)")
+	rootCmd.PersistentFlags().StringVar(&flagLanBroadcast, "lan-broadcast", "", "LAN broadcast or target IP (e.g. 255.255.255.255 or 192.168.1.255)")
+	rootCmd.PersistentFlags().DurationVar(&flagRefresh, "refresh", 5*time.Second, "Auto-refresh interval (0 to disable)")
+	rootCmd.PersistentFlags().BoolVar(&flagDebug, "debug", false, "Enable debug logging")
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.TEMPLATE.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
-	// Settings
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 }
 
+var (
+	flagBackend string
+	flagAPIKey  string
+	flagLanListen string
+	flagLanBroadcast string
+	flagRefresh time.Duration
+	flagDebug   bool
+)
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "TEMPLATE",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Use:   "lifx",
+	Short: "A gorgeous LIFX terminal UI",
+	Long: `lifx is a gorgeous terminal UI for controlling LIFX lights.
+It prefers the LIFX LAN protocol, but can use the HTTP API when LIFX_API_KEY is set.`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		opts := tui.Options{
+			Backend: flagBackend,
+			APIKey:  flagAPIKey,
+			LanListen: flagLanListen,
+			LanBroadcast: flagLanBroadcast,
+			AutoRefresh: flagRefresh,
+			Debug:   flagDebug,
+		}
+		return tui.Run(cmd.Context(), opts)
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
