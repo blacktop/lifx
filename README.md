@@ -35,6 +35,12 @@ Via Go:
 go install github.com/blacktop/lifx@latest
 ```
 
+Via [Homebrew](https://brew.sh)
+
+```bash
+brew install blacktop/tap/lifx
+```
+
 ### Backend selection
 
 - Default is **auto**: tries API if `LIFX_API_KEY` is set, otherwise uses LAN.
