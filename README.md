@@ -35,21 +35,6 @@ Via Go:
 go install github.com/blacktop/lifx@latest
 ```
 
-From source:
-
-```bash
-git clone https://github.com/blacktop/lifx
-cd lifx
-make build
-./lifx
-```
-
-## Usage
-
-```bash
-lifx
-```
-
 ### Backend selection
 
 - Default is **auto**: tries API if `LIFX_API_KEY` is set, otherwise uses LAN.
@@ -124,9 +109,29 @@ lifx mcp
 | `list_scenes` | List all available scenes |
 | `activate_scene` | Activate a scene by ID |
 
-### Claude Code Configuration
+### Configuration
 
-Add to `~/.claude.json`:
+#### [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview)
+
+```bash
+claude mcp add lifx -e LIFX_API_KEY=your_api_key -- lifx mcp
+```
+
+#### [Codex CLI](https://platform.openai.com/docs/guides/mcp)
+
+```bash
+codex mcp add lifx --env LIFX_API_KEY=your_api_key -- lifx mcp
+```
+
+#### [Gemini CLI](https://github.com/google/gemini-cli)
+
+```bash
+gemini mcp add lifx lifx mcp -e LIFX_API_KEY=your_api_key
+```
+
+#### [Claude Desktop](https://claude.ai/download)
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
