@@ -1,0 +1,51 @@
+# LIFX Configuration File
+# Place this file at ~/.config/lifx/config.yaml
+
+# Custom color presets
+# Each preset requires: name, hue (0-360), saturation (0-100), kelvin (2500-9000)
+presets:
+  - name: Sunrise
+    hue: 35
+    saturation: 80
+    kelvin: 2500
+
+  - name: Morning
+    hue: 40
+    saturation: 30
+    kelvin: 4000
+
+  - name: Daylight
+    hue: 0
+    saturation: 0
+    kelvin: 5500
+
+  - name: Sunset
+    hue: 18
+    saturation: 100
+    kelvin: 2700
+
+  - name: Evening
+    hue: 30
+    saturation: 60
+    kelvin: 2700
+
+  - name: Night
+    hue: 15
+    saturation: 100
+    kelvin: 2000
+
+  # Additional examples:
+  # - name: Red
+  #   hue: 0
+  #   saturation: 100
+  #   kelvin: 3500
+  #
+  # - name: Green
+  #   hue: 120
+  #   saturation: 100
+  #   kelvin: 3500
+  #
+  # - name: Blue
+  #   hue: 240
+  #   saturation: 100
+  #   kelvin: 3500

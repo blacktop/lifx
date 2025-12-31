@@ -275,12 +275,12 @@ type stdLogger struct {
 	log *log.Logger
 }
 
-func (l *stdLogger) Debugf(format string, args ...interface{}) { l.log.Printf(format, args...) }
-func (l *stdLogger) Infof(format string, args ...interface{})  { l.log.Printf(format, args...) }
-func (l *stdLogger) Warnf(format string, args ...interface{})  { l.log.Printf(format, args...) }
-func (l *stdLogger) Errorf(format string, args ...interface{}) { l.log.Printf(format, args...) }
-func (l *stdLogger) Fatalf(format string, args ...interface{}) {
+func (l *stdLogger) Debugf(format string, args ...any) { l.log.Printf(format, args...) }
+func (l *stdLogger) Infof(format string, args ...any)  { l.log.Printf(format, args...) }
+func (l *stdLogger) Warnf(format string, args ...any)  { l.log.Printf(format, args...) }
+func (l *stdLogger) Errorf(format string, args ...any) { l.log.Printf(format, args...) }
+func (l *stdLogger) Fatalf(format string, args ...any) {
 	l.log.Printf(format, args...)
 	os.Exit(1)
 }
-func (l *stdLogger) Panicf(format string, args ...interface{}) { panic(fmt.Sprintf(format, args...)) }
+func (l *stdLogger) Panicf(format string, args ...any) { panic(fmt.Sprintf(format, args...)) }

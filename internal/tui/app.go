@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/blacktop/lifx/internal/backend"
+	"github.com/blacktop/lifx/internal/config"
 	"github.com/blacktop/lifx/internal/models"
 	"github.com/blacktop/lifx/internal/tui/styles"
 	"github.com/charmbracelet/bubbles/spinner"
@@ -108,7 +109,7 @@ func NewModel(ctx context.Context, be backend.Backend, warn string) Model {
 		showPanel:      true,
 		searchInput:    search,
 		scenesModal:    NewScenesModel(),
-		colorPresets:   defaultPresets(),
+		colorPresets:   loadPresets(),
 	}
 }
 
@@ -865,7 +866,7 @@ func (m *Model) renderPanel(width int) string {
 		b.WriteString("\n\n")
 
 		// Lights list
-		b.WriteString(styles.StyleMuted.Render("Lights:\n"))
+		b.WriteString(styles.StyleMuted.Render("Lights:") + "\n")
 		maxLights := 6
 		for i, light := range group.Lights {
 			if i >= maxLights {
@@ -924,17 +925,19 @@ func (m *Model) renderPanel(width int) string {
 		b.WriteString("\n\n")
 
 		// Presets
-		b.WriteString(styles.StyleMuted.Render("Presets (p/P):\n"))
+		b.WriteString(styles.StyleMuted.Render("Presets (p/P):") + "\n")
 		for i, preset := range m.colorPresets {
-			name := preset.Name
 			presetHex := preset.Color.Hex()
 			colorDot := lipgloss.NewStyle().Foreground(lipgloss.Color(presetHex)).Render("●")
+			var indicator, name string
 			if i == m.presetIndex {
-				name = styles.StyleSelected.Render("▸ " + name)
+				indicator = styles.StyleSelected.Render("▸")
+				name = styles.StyleSelected.Render(preset.Name)
 			} else {
-				name = "  " + name
+				indicator = " "
+				name = preset.Name
 			}
-			b.WriteString(fmt.Sprintf("%s %s\n", colorDot, name))
+			b.WriteString(fmt.Sprintf("%s %s %s\n", colorDot, indicator, name))
 		}
 	}
 
@@ -1091,12 +1094,31 @@ func brightnessFromKey(key string) int {
 	}
 }
 
-func defaultPresets() []colorPreset {
+func loadPresets() []colorPreset {
+	// Try to load from config file
+	cfg, err := config.Load()
+	if err == nil && cfg != nil && len(cfg.Presets) > 0 {
+		presets := make([]colorPreset, len(cfg.Presets))
+		for i, p := range cfg.Presets {
+			presets[i] = colorPreset{
+				Name: p.Name,
+				Color: models.Color{
+					Hue:        p.Hue,
+					Saturation: p.Saturation,
+					Kelvin:     p.Kelvin,
+				},
+			}
+		}
+		return presets
+	}
+
+	// Fall back to defaults
 	return []colorPreset{
-		{Name: "Amber", Color: models.Color{Hue: 35, Saturation: 90, Kelvin: 3000}},
-		{Name: "Sunset", Color: models.Color{Hue: 18, Saturation: 100, Kelvin: 2700}},
-		{Name: "Lime", Color: models.Color{Hue: 110, Saturation: 90, Kelvin: 3500}},
-		{Name: "Cyan", Color: models.Color{Hue: 190, Saturation: 100, Kelvin: 5000}},
-		{Name: "Magenta", Color: models.Color{Hue: 300, Saturation: 100, Kelvin: 3500}},
+		{Name: "Sunrise", Color: models.Color{Hue: 35, Saturation: 80, Kelvin: 2500}}, // Warm orange glow
+		{Name: "Morning", Color: models.Color{Hue: 40, Saturation: 30, Kelvin: 4000}}, // Soft warm white
+		{Name: "Daylight", Color: models.Color{Hue: 0, Saturation: 0, Kelvin: 5500}},  // Bright neutral white
+		{Name: "Sunset", Color: models.Color{Hue: 18, Saturation: 100, Kelvin: 2700}}, // Deep orange/red
+		{Name: "Evening", Color: models.Color{Hue: 30, Saturation: 60, Kelvin: 2700}}, // Warm amber
+		{Name: "Night", Color: models.Color{Hue: 15, Saturation: 100, Kelvin: 2000}},  // Dim warm red
 	}
 }

@@ -156,7 +156,7 @@ func (b *Backend) SetLightPower(ctx context.Context, lightID string, on bool) er
 	if on {
 		power = "on"
 	}
-	return b.setState(ctx, "id:"+lightID, map[string]interface{}{
+	return b.setState(ctx, "id:"+lightID, map[string]any{
 		"power":    power,
 		"duration": 0.2,
 	})
@@ -167,7 +167,7 @@ func (b *Backend) SetAllPower(ctx context.Context, on bool) error {
 	if on {
 		power = "on"
 	}
-	return b.setState(ctx, "all", map[string]interface{}{
+	return b.setState(ctx, "all", map[string]any{
 		"power":    power,
 		"duration": 0.2,
 	})
@@ -175,7 +175,7 @@ func (b *Backend) SetAllPower(ctx context.Context, on bool) error {
 
 func (b *Backend) SetLightColor(ctx context.Context, lightID string, color models.Color) error {
 	c := color.Clamp()
-	return b.setState(ctx, "id:"+lightID, map[string]interface{}{
+	return b.setState(ctx, "id:"+lightID, map[string]any{
 		"color":      fmt.Sprintf("hue:%d saturation:%f", c.Hue, float64(c.Saturation)/100.0),
 		"brightness": float64(c.Brightness) / 100.0,
 		"kelvin":     c.Kelvin,
@@ -316,7 +316,7 @@ func (b *Backend) listScenes(ctx context.Context) ([]apiScene, error) {
 	return scenes, nil
 }
 
-func (b *Backend) setState(ctx context.Context, selector string, state map[string]interface{}) error {
+func (b *Backend) setState(ctx context.Context, selector string, state map[string]any) error {
 	url := fmt.Sprintf("%s/lights/%s/state", baseURL, selector)
 
 	body, err := json.Marshal(state)

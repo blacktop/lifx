@@ -41,12 +41,12 @@ func init() {
 }
 
 var (
-	flagBackend string
-	flagAPIKey  string
-	flagLanListen string
+	flagBackend      string
+	flagAPIKey       string
+	flagLanListen    string
 	flagLanBroadcast string
-	flagRefresh time.Duration
-	flagDebug   bool
+	flagRefresh      time.Duration
+	flagDebug        bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -57,12 +57,12 @@ var rootCmd = &cobra.Command{
 It prefers the LIFX LAN protocol, but can use the HTTP API when LIFX_API_KEY is set.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		opts := tui.Options{
-			Backend: flagBackend,
-			APIKey:  flagAPIKey,
-			LanListen: flagLanListen,
+			Backend:      flagBackend,
+			APIKey:       flagAPIKey,
+			LanListen:    flagLanListen,
 			LanBroadcast: flagLanBroadcast,
-			AutoRefresh: flagRefresh,
-			Debug:   flagDebug,
+			AutoRefresh:  flagRefresh,
+			Debug:        flagDebug,
 		}
 		return tui.Run(cmd.Context(), opts)
 	},

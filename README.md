@@ -59,6 +59,43 @@ Get your API key from [cloud.lifx.com/settings](https://cloud.lifx.com/settings)
 export LIFX_API_KEY=...  # Required for API backend and MCP server
 ```
 
+## Configuration
+
+Customize color presets by creating a config file:
+
+| Platform | Location |
+| -------- | -------- |
+| macOS    | `~/Library/Application Support/lifx/config.yaml` |
+| Linux    | `~/.config/lifx/config.yaml` |
+| Windows  | `%AppData%\lifx\config.yaml` |
+
+Example config with custom presets:
+
+```yaml
+presets:
+  - name: Sunrise
+    hue: 35
+    saturation: 80
+    kelvin: 2500
+
+  - name: Daylight
+    hue: 0
+    saturation: 0
+    kelvin: 5500
+
+  - name: Red
+    hue: 0
+    saturation: 100
+    kelvin: 3500
+
+  - name: Green
+    hue: 120
+    saturation: 100
+    kelvin: 3500
+```
+
+See [docs/config.example.yaml](docs/config.example.yaml) for a complete example.
+
 ## Keybindings
 
 ### Navigation
