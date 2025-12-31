@@ -2,19 +2,17 @@
 # Run with: vhs vhs.tape
 
 Output vhs.gif
-Output vhs.mp4
-Output vhs.webm
 
 Set FontSize 14
 Set Width 1200
 Set Height 700
-Set Theme "Catppuccin Mocha"
+Set Theme "rose-pine-moon"
 Set Padding 20
 Set TypingSpeed 50ms
 Set Shell "bash"
 
 # Start the app
-Type "./lifx --backend lan"
+Type "./lifx"
 Enter
 Sleep 2500ms
 
