@@ -31,7 +31,7 @@ func Run(ctx context.Context, opts Options) error {
 		return err
 	}
 
-	model := NewModel(ctx, be, warn)
+	model := NewModel(ctx, be, warn, opts.AutoRefresh)
 	program := tea.NewProgram(model, tea.WithAltScreen())
 	_, err = program.Run()
 	return err

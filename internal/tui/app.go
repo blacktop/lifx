@@ -51,9 +51,12 @@ type errMsg struct {
 
 type statusClearMsg struct{}
 
+type autoRefreshMsg struct{}
+
 type Model struct {
 	backend        backend.Backend
 	backendWarning string
+	autoRefresh    time.Duration
 
 	ctx    context.Context
 	cancel context.CancelFunc
@@ -88,7 +91,7 @@ type Model struct {
 }
 
 // NewModel creates a new TUI model.
-func NewModel(ctx context.Context, be backend.Backend, warn string) Model {
+func NewModel(ctx context.Context, be backend.Backend, warn string, autoRefresh time.Duration) Model {
 	ctx, cancel := context.WithCancel(ctx)
 
 	sp := spinner.New()
@@ -102,6 +105,7 @@ func NewModel(ctx context.Context, be backend.Backend, warn string) Model {
 	return Model{
 		backend:        be,
 		backendWarning: warn,
+		autoRefresh:    autoRefresh,
 		ctx:            ctx,
 		cancel:         cancel,
 		spinner:        sp,
@@ -118,6 +122,9 @@ func (m Model) Init() tea.Cmd {
 		tea.SetWindowTitle("LIFX"),
 		m.spinner.Tick,
 		m.refreshCmd(),
+	}
+	if m.autoRefresh > 0 {
+		cmds = append(cmds, m.autoRefreshTickCmd())
 	}
 	if m.backendWarning != "" {
 		cmds = append(cmds, m.setStatusCmd(m.backendWarning, statusWarn))
@@ -156,6 +163,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case statusClearMsg:
 		m.status = statusMessage{}
 		return m, nil
+
+	case autoRefreshMsg:
+		// Trigger a background refresh and schedule the next tick
+		var cmds []tea.Cmd
+		cmds = append(cmds, m.refreshCmd())
+		if m.autoRefresh > 0 {
+			cmds = append(cmds, m.autoRefreshTickCmd())
+		}
+		return m, tea.Batch(cmds...)
 
 	case sceneActivateMsg:
 		m.showScenes = false
@@ -335,6 +351,12 @@ func (m *Model) refreshCmd() tea.Cmd {
 		}
 		return dataMsg{state: state}
 	}
+}
+
+func (m *Model) autoRefreshTickCmd() tea.Cmd {
+	return tea.Tick(m.autoRefresh, func(time.Time) tea.Msg {
+		return autoRefreshMsg{}
+	})
 }
 
 func (m *Model) setStatusCmd(text string, level statusLevel) tea.Cmd {
